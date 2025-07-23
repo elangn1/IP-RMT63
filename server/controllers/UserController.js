@@ -7,12 +7,11 @@ const client = new OAuth2Client();
 module.exports = class UserController {
   static async register(req, res, next) {
     try {
-      const addedUser = await User.create(req.body);
+      const createdUser = await User.create(req.body);
 
       res.status(201).json({
-        id: addedUser.id,
-        username: addedUser.username,
-        email: addedUser.email
+        id: createdUser.id,
+        email: createdUser.email
       });
     } catch (err) {
       next(err);
