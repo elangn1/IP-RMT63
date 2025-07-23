@@ -3,10 +3,14 @@ const router = express.Router();
 const PlanController = require("../controllers/PlanController");
 
 // CRUD Plan
-router.post("/", PlanController.createPlan); // Create Plan
-router.get("/", PlanController.getAllPlans); // Get all Plans
+router.post("/", PlanController.createPlan);
+router.get("/", PlanController.getPlans);
+router.get("/:id", PlanController.getPlanById);
+router.put("/:id", PlanController.updatePlanById);
+router.delete("/:id", PlanController.deletePlanById);
 
 // Endpoint untuk AI Feedback
-router.put("/:id/feedback", PlanController.createAIFeedbackPlan); // Generate AI feedback
+// Generate AI feedback
+router.put("/:id/feedback", PlanController.createAIFeedbackPlan);
 
 module.exports = router;

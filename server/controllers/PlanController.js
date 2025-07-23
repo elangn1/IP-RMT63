@@ -17,10 +17,56 @@ class PlanController {
     }
   }
 
-  static async getAllPlans(req, res, next) {
+  static async getPlans(req, res, next) {
     try {
       const plans = await Plan.findAll();
       res.status(200).json(plans);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getPlanById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const plan = await Plan.findByPk(id);
+      if (!plan) throw { name: "NotFound" };
+      res.status(200).json(plan);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async updatePlanById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { judulBelajar } = req.body;
+
+      const plan = await Plan.findByPk(id);
+      if (!plan) throw { name: "NotFound" };
+
+      // Generate AI feedback for updated plan
+      const prompt = `Beri feedback untuk rencana belajar berikut: ${judulBelajar}`;
+      const aiFeedback = await generateGeminiContent(prompt);
+
+      plan.judulBelajar = judulBelajar;
+      plan.aiFeedback = aiFeedback;
+      await plan.save();
+
+      res.status(200).json(plan);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async deletePlanById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const plan = await Plan.findByPk(id);
+      if (!plan) throw { name: "NotFound" };
+
+      await plan.destroy();
+      res.status(200).json({ message: "Plan deleted successfully" });
     } catch (err) {
       next(err);
     }
