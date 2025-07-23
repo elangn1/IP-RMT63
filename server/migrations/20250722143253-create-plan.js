@@ -23,6 +23,10 @@ module.exports = {
       aiFeedback: {
         type: Sequelize.TEXT
       },
+      quizzes: {
+        type: Sequelize.JSONB,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
