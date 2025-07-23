@@ -114,6 +114,25 @@ class PlanController {
       next(err);
     }
   }
+
+  static async generateQuizzesFromGemini(req, res, next) {
+    try {
+      const { id } = req.params;
+      const plan = await Plan.findByPk(id);
+
+      if (!plan) {
+        throw { name: "NotFound", message: "NotFound" };
+      }
+
+      const prompt = `Buat kuis dari rencana belajar berikut: ${plan.judulBelajar}`;
+      const quizzes = await generateGeminiContent(prompt);
+      plan.quizzes = quizzes;
+      await plan.save();
+      res.status(200).json({ quizzes });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = PlanController;
