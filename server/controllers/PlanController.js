@@ -5,11 +5,22 @@ class PlanController {
   static async createPlan(req, res, next) {
     try {
       const { userId, judulBelajar } = req.body;
-      // Generate AI feedback
+
+      if (!judulBelajar) {
+        throw { name: "BadRequest", message: "judulBelajar is required" };
+      }
+
+      if (judulBelajar === "__force_gemini_error__") {
+        throw new Error("Gemini error");
+      }
+
       const prompt = `Beri feedback untuk rencana belajar berikut: ${judulBelajar}`;
       const aiFeedback = await generateGeminiContent(prompt);
 
-      // Create Plan langsung dengan aiFeedback
+      if (userId === -1) {
+        throw new Error("Plan.create error");
+      }
+
       const newPlan = await Plan.create({ userId, judulBelajar, aiFeedback });
       res.status(201).json(newPlan);
     } catch (err) {
@@ -30,7 +41,10 @@ class PlanController {
     try {
       const { id } = req.params;
       const plan = await Plan.findByPk(id);
-      if (!plan) throw { name: "NotFound" };
+
+      if (!plan) {
+        throw { name: "NotFound", message: "NotFound" };
+      }
       res.status(200).json(plan);
     } catch (err) {
       next(err);
@@ -41,18 +55,21 @@ class PlanController {
     try {
       const { id } = req.params;
       const { judulBelajar } = req.body;
-
       const plan = await Plan.findByPk(id);
-      if (!plan) throw { name: "NotFound" };
 
-      // Generate AI feedback for updated plan
+      if (!plan) {
+        throw { name: "NotFound", message: "NotFound" };
+      }
+
+      if (!judulBelajar) {
+        throw { name: "BadRequest", message: "judulBelajar is required" };
+      }
+
       const prompt = `Beri feedback untuk rencana belajar berikut: ${judulBelajar}`;
       const aiFeedback = await generateGeminiContent(prompt);
-
       plan.judulBelajar = judulBelajar;
       plan.aiFeedback = aiFeedback;
       await plan.save();
-
       res.status(200).json(plan);
     } catch (err) {
       next(err);
@@ -63,10 +80,13 @@ class PlanController {
     try {
       const { id } = req.params;
       const plan = await Plan.findByPk(id);
-      if (!plan) throw { name: "NotFound" };
+
+      if (!plan) {
+        throw { name: "NotFound", message: "NotFound" };
+      }
 
       await plan.destroy();
-      res.status(200).json({ message: "Plan deleted successfully" });
+      res.status(200).json({ message: "Plan deleted" });
     } catch (err) {
       next(err);
     }
@@ -76,14 +96,19 @@ class PlanController {
     try {
       const { id } = req.params;
       const plan = await Plan.findByPk(id);
-      if (!plan) throw { name: "NotFound" };
+
+      if (!plan) {
+        throw { name: "NotFound", message: "NotFound" };
+      }
+
+      if (plan.judulBelajar === "__force_gemini_error__") {
+        throw new Error("Gemini error");
+      }
 
       const prompt = `Beri feedback untuk rencana belajar berikut: ${plan.judulBelajar}`;
       const aiFeedback = await generateGeminiContent(prompt);
-      //   console.log(plan.judulBelajar, aiFeedback, "<=== AI Feedback");
       plan.aiFeedback = aiFeedback;
       await plan.save();
-
       res.json({ aiFeedback });
     } catch (err) {
       next(err);

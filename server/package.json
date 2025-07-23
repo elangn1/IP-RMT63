@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx nodemon app.js"
+    "test": "jest --detectOpenHandles --verbose --silent --coverage",
+    "dev": "npx nodemon bin/www"
   },
   "keywords": [],
   "author": "",
