@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: DataTypes.INTEGER,
       judulBelajar: DataTypes.STRING,
-      aiFeedback: DataTypes.TEXT
+      aiFeedback: DataTypes.TEXT,
+      quizzes: DataTypes.JSONB
     },
     {
       sequelize,

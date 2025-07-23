@@ -220,4 +220,12 @@ describe("Plan API", () => {
     expect(res.statusCode).toBe(404);
     expect(res.body).toHaveProperty("message");
   });
+
+  test("PUT /plans/:id/feedback - fail (force gemini error in feedback)", async () => {
+    // Test plan dengan judulBelajar "__force_gemini_error__" di endpoint feedback
+    const res = await request(app)
+      .put(`/plans/${aiErrorPlanId}/feedback`)
+      .set("Authorization", `Bearer ${access_token}`);
+    expect(res.statusCode).toBeGreaterThanOrEqual(400);
+  });
 });
