@@ -4,6 +4,8 @@ const PlanController = require("../controllers/PlanController");
 const authentication = require("../middleware/authentication");
 
 router.use(authentication);
+router.get("/quotes", PlanController.getRandomQuote);
+router.get("/activity", PlanController.getRandomActivity);
 
 // CRUD Plan
 router.post("/", PlanController.createPlan);

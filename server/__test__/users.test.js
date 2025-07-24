@@ -3,7 +3,6 @@ const app = require("../app");
 const { sequelize, User } = require("../models");
 const { queryInterface } = sequelize;
 const { hashPassword } = require("../helpers/bcrypt");
-const { OAuth2Client } = require("google-auth-library");
 
 beforeAll(async () => {
   await queryInterface.bulkInsert("Users", [

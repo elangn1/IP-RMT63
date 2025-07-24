@@ -6,6 +6,7 @@ List of available endpoints:
 
 - `POST /register`
 - `POST /login`
+- `POST /google-login`
 
 Routes below need authentication:
 
@@ -93,6 +94,46 @@ _Response (400 - Bad Request)_
 ```json
 {
   "message": "Invalid email or password"
+}
+```
+
+_Response (500 - Internal Server Error)_
+
+```json
+{
+  "message": "Internal Server Error"
+}
+```
+
+## 2a. POST /google-login
+
+Description:
+
+- Login/register user via Google OAuth
+
+Request:
+
+- body:
+
+```json
+{
+  "google_token": "string"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "access_token": "string"
+}
+```
+
+_Response (400 - Bad Request)_
+
+```json
+{
+  "message": "Invalid Google token"
 }
 ```
 
@@ -549,6 +590,91 @@ _Response (500 - Internal Server Error)_
 }
 ```
 
+## 10. GET /plans/quotes
+
+Description:
+
+- Get a random inspirational quote (ZenQuotes)
+
+Request:
+
+- headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "q": "string", // quote text
+  "a": "string" // author
+}
+```
+
+_Response (401 - Unauthorized)_
+
+```json
+{
+  "message": "Invalid token"
+}
+```
+
+_Response (500 - Internal Server Error)_
+
+```json
+{
+  "message": "Internal Server Error"
+}
+```
+
+---
+
+## 11. GET /plans/activity
+
+Description:
+
+- Get a random activity (Bored API)
+
+Request:
+
+- headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "activity": "string"
+}
+```
+
+_Response (401 - Unauthorized)_
+
+```json
+{
+  "message": "Invalid token"
+}
+```
+
+_Response (500 - Internal Server Error)_
+
+```json
+{
+  "message": "Internal Server Error"
+}
+```
+
+---
+
 ---
 
 **Note:**
@@ -557,11 +683,16 @@ _Response (500 - Internal Server Error)_
   `Authorization: Bearer <access_token>`
 - Field `quizzes` di Plan adalah array of object, misal:
   ```json
-  [
-    {
-      "pertanyaan": "Apa itu React?",
-      "correctAnswer": "Library UI",
-      "userAnswer": ""
-    }
+  "quizzes": [
+        {
+            "pertanyaan": "Mengapa penting untuk belajar fokus pada masa kini?",
+            "options": [
+                "Agar tidak mengulang kesalahan masa lalu.",
+                "Karena masa depan belum terjadi dan masa lalu sudah berlalu.",
+                "Untuk merencanakan masa depan dengan lebih baik.",
+                "Agar dapat melupakan semua masalah secara instan."
+            ],
+            "correctAnswer": "Karena masa depan belum terjadi dan masa lalu sudah berlalu."
+        }
   ]
   ```

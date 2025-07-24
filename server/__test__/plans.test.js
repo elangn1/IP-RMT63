@@ -48,6 +48,36 @@ afterAll(async () => {
 });
 
 describe("Plan API", () => {
+  test("GET /plans/activity - success get random activity", async () => {
+    const res = await request(app)
+      .get("/plans/activity")
+      .set("Authorization", `Bearer ${access_token}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("activity");
+    expect(typeof res.body.activity).toBe("string");
+  });
+
+  test("GET /plans/activity - fail (no token)", async () => {
+    const res = await request(app).get("/plans/activity");
+    expect(res.statusCode).toBeGreaterThanOrEqual(400);
+    expect(res.body).toHaveProperty("message");
+  });
+  test("GET /plans/quotes - success get motivational quote", async () => {
+    const res = await request(app)
+      .get("/plans/quotes")
+      .set("Authorization", `Bearer ${access_token}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("q");
+    expect(res.body).toHaveProperty("a");
+    expect(typeof res.body.q).toBe("string");
+    expect(typeof res.body.a).toBe("string");
+  });
+
+  test("GET /plans/quotes - fail (no token)", async () => {
+    const res = await request(app).get("/plans/quotes");
+    expect(res.statusCode).toBeGreaterThanOrEqual(400);
+    expect(res.body).toHaveProperty("message");
+  });
   test("POST /plans - success create plan", async () => {
     const res = await request(app)
       .post("/plans")
@@ -155,8 +185,8 @@ describe("Plan API", () => {
     const res = await request(app)
       .post("/plans")
       .set("Authorization", `Bearer ${access_token}`)
-      .send({ userId: -1, judulBelajar: "Belajar Error" });
-    expect(res.statusCode).toBeGreaterThanOrEqual(400);
+      .send({ userId: 1, judulBelajar: "" });
+    expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("message");
   });
 
