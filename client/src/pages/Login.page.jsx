@@ -1,6 +1,7 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, Navigate } from "react-router";
 import { useState, useEffect } from "react";
 import { serverApi } from "../utils/api";
+import axios from "axios";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -72,82 +73,117 @@ export default function LoginPage() {
     }
   }, []);
 
+  const access_token = localStorage.getItem("access_token");
+
+  if (access_token) {
+    return <Navigate to="/home" />;
+  }
+
   return (
-    <div className="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div className="row w-100">
-        <div className="col-12 col-md-6 col-lg-4 mx-auto">
-          <div className="card shadow-lg border-0">
-            <div className="card-body p-4">
-              <div className="text-center mb-4">
-                <h3 className="card-title fw-bold text-dark">Welcome Back</h3>
-                <p className="text-muted">Please sign in to your account</p>
-              </div>
-
-              <form onSubmit={handleLogin}>
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label fw-semibold">
-                    Email Address <span className="text-danger">*</span>
-                  </label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-white border-end-0">
-                      <i className="bi bi-envelope"></i>
-                    </span>
-                    <input
-                      type="email"
-                      className="form-control border-start-0"
-                      id="email"
-                      name="email"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label fw-semibold">
-                    Password <span className="text-danger">*</span>
-                  </label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-white border-end-0">
-                      <i className="bi bi-lock"></i>
-                    </span>
-                    <input
-                      type="password"
-                      className="form-control border-start-0"
-                      id="password"
-                      name="password"
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <button type="submit" className="btn btn-primary w-100 rounded-pill py-2 mb-3">
-                  <i className="bi bi-box-arrow-in-right me-2"></i>
-                  Sign In
-                </button>
-
-                <div className="text-center mb-3">
-                  <span className="text-muted">or</span>
-                </div>
-
-                <div id="buttonDiv" className="d-flex justify-content-center mb-3"></div>
-
-                <hr className="my-4" />
-
-                <div className="text-center">
-                  <span className="text-muted">Don't have an account? </span>
-                  <Link to="/register" className="text-decoration-none text-primary fw-semibold">
-                    Create one
-                  </Link>
-                </div>
-              </form>
-            </div>
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
+      <div className="flex-1 flex flex-col md:flex-row items-center justify-center py-8 px-4 gap-8 md:gap-16">
+        {/* Left: Illustration */}
+        <div className="hidden md:flex flex-1 flex-col items-center justify-center">
+          <img
+            src="/atomic-logo.svg"
+            alt="Atomic Study Illustration"
+            className="w-60 h-60 mb-6 drop-shadow-2xl animate-bounce-slow"
+          />
+          <h3 className="text-2xl font-bold text-blue-700 mb-2 dark:text-blue-300">
+            Belajar Lebih Personal
+          </h3>
+          <p className="text-gray-500 text-center max-w-xs dark:text-gray-300">
+            Bangun kebiasaan belajar efektif, dapatkan rekomendasi AI, dan quiz interaktif yang
+            bikin belajar makin seru!
+          </p>
+        </div>
+        {/* Right: Login Form */}
+        <div className="flex-1 w-full max-w-md bg-white rounded-2xl shadow-xl p-8 min-h-[540px] flex flex-col justify-center mx-auto md:mx-0 dark:bg-gray-900 dark:shadow-blue-900 dark:border dark:border-blue-900">
+          <div className="mb-8">
+            <h2 className="text-3xl font-extrabold text-blue-700 mb-1 text-center dark:text-blue-300">
+              Sign in to Atomic Study
+            </h2>
+            <p className="text-gray-500 text-center dark:text-gray-300">
+              Sign in to your account to start learning
+            </p>
           </div>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-gray-700 mb-1 dark:text-gray-200"
+              >
+                Email <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 bg-blue-50 dark:bg-gray-800 dark:text-white dark:border-blue-700"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold text-gray-700 mb-1 dark:text-gray-200"
+              >
+                Password <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 bg-blue-50 dark:bg-gray-800 dark:text-white dark:border-blue-700"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full py-3 bg-blue-700 text-white font-bold rounded-lg shadow hover:bg-blue-800 transition text-lg mb-2 flex items-center justify-center gap-2 dark:bg-blue-800 dark:hover:bg-blue-900"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-3A2.25 2.25 0 008.25 5.25V9m7.5 0v10.5A2.25 2.25 0 0113.5 21h-3A2.25 2.25 0 018.25 19.5V9m7.5 0H8.25m7.5 0a2.25 2.25 0 012.25 2.25v7.5A2.25 2.25 0 0115.75 21H8.25A2.25 2.25 0 016 19.5v-7.5A2.25 2.25 0 018.25 9h7.5z"
+                />
+              </svg>
+              Sign In
+            </button>
+            <div className="flex items-center my-2">
+              <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+              <span className="mx-3 text-gray-400 text-sm dark:text-gray-300">or</span>
+              <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+            </div>
+            <div
+              id="buttonDiv"
+              className="flex flex-col justify-center items-center transition-none"
+              style={{ height: 70, minHeight: 70, maxHeight: 70 }}
+            ></div>
+            <div className="text-center mt-4">
+              <span className="text-gray-500 dark:text-gray-300">Don't have an account? </span>
+              <Link
+                to="/register"
+                className="text-blue-600 font-semibold hover:underline dark:text-blue-400"
+              >
+                Register for free
+              </Link>
+            </div>
+          </form>
         </div>
       </div>
     </div>
