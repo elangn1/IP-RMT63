@@ -25,7 +25,7 @@ afterAll(async () => {
 
 describe("User API", () => {
   test("POST /register - success", async () => {
-    const res = await request(app).post("/register").send({
+    const res = await request(app).post("/users/register").send({
       email: "newuser@mail.com",
       password: "password123"
     });
@@ -35,7 +35,7 @@ describe("User API", () => {
   });
 
   test("POST /login - success", async () => {
-    const res = await request(app).post("/login").send({
+    const res = await request(app).post("/users/login").send({
       email: "testuser@mail.com",
       password: "password123"
     });
@@ -44,7 +44,7 @@ describe("User API", () => {
   });
 
   test("POST /login - fail (wrong password)", async () => {
-    const res = await request(app).post("/login").send({
+    const res = await request(app).post("/users/login").send({
       email: "testuser@mail.com",
       password: "wrongpassword"
     });
@@ -53,7 +53,7 @@ describe("User API", () => {
   });
 
   test("POST /register - fail (email already exists)", async () => {
-    const res = await request(app).post("/register").send({
+    const res = await request(app).post("/users/register").send({
       email: "testuser@mail.com",
       password: "password123"
     });
@@ -62,7 +62,7 @@ describe("User API", () => {
   });
 
   test("POST /register - fail (missing email)", async () => {
-    const res = await request(app).post("/register").send({
+    const res = await request(app).post("/users/register").send({
       password: "password123"
     });
     expect(res.statusCode).toBeGreaterThanOrEqual(400);
@@ -70,7 +70,7 @@ describe("User API", () => {
   });
 
   test("POST /login - fail (missing email)", async () => {
-    const res = await request(app).post("/login").send({
+    const res = await request(app).post("/users/login").send({
       password: "password123"
     });
     expect(res.statusCode).toBe(400);
@@ -78,7 +78,7 @@ describe("User API", () => {
   });
 
   test("POST /login - fail (missing password)", async () => {
-    const res = await request(app).post("/login").send({
+    const res = await request(app).post("/users/login").send({
       email: "testuser@mail.com"
     });
     expect(res.statusCode).toBe(400);
@@ -86,7 +86,7 @@ describe("User API", () => {
   });
 
   test("POST /login - fail (user not found)", async () => {
-    const res = await request(app).post("/login").send({
+    const res = await request(app).post("/users/login").send({
       email: "notfound@mail.com",
       password: "password123"
     });
