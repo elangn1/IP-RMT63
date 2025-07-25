@@ -27,7 +27,7 @@ beforeAll(async () => {
   );
   userId = user ? user.id : 1;
 
-  const res = await request(app).post("/login").send({
+  const res = await request(app).post("/users/login").send({
     email: "planuser@mail.com",
     password: "password123"
   });
