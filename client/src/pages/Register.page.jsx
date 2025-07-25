@@ -10,7 +10,7 @@ export default function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await serverApi.post("/register", { email, password });
+      await serverApi.post("/users/register", { email, password });
       Swal.fire({
         icon: "success",
         text: "Registration successful! Please login.",
@@ -29,7 +29,7 @@ export default function RegisterPage() {
   async function handleCredentialResponse(response) {
     console.log("Encoded JWT ID token: " + response.credential);
     try {
-      const { data } = await axios.post("http://localhost:3000/google-login", {
+      const { data } = await axios.post("/users/google-login", {
         id_token: response.credential
       });
 
