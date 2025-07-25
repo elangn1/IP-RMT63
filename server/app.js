@@ -8,7 +8,6 @@ const errorHandler = require("./middleware/errorHandler");
 const userRoutes = require("./routes/user");
 const planRoutes = require("./routes/plan");
 const app = express();
-const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
